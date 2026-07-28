@@ -1,4 +1,3 @@
-# server.py
 import asyncio
 import uvicorn
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -11,7 +10,7 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# Speicher für aktive Connections
+# Memory for Active Connections
 clients = set()
 
 @app.get("/")
@@ -23,12 +22,9 @@ async def websocket_endpoint(ws: WebSocket):
     await ws.accept()
     clients.add(ws)
     try:
-        # Eingehende Nachrichten (Shell‑Output vom Agent)
         while True:
             data = await ws.receive_text()
-            # Ausgabe im Server‑Terminal
             print(f"[Agent] {data}", end="")
-            # Alternativ: Buffer für UI speichern
     except WebSocketDisconnect:
         clients.remove(ws)
 
@@ -44,5 +40,4 @@ async def send_command(cmd: str):
         clients.remove(ws)
 
 if __name__ == "__main__":
-    # Starte den Server (HTTP + WS) auf Port 8000
     uvicorn.run(app, host="0.0.0.0", port=8000)
