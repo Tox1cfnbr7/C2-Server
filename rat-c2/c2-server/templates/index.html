@@ -12,17 +12,11 @@
 
     <script src="/static/xterm.js"></script>
     <script>
-        // Terminal initialisieren und ins DIV einbetten
         const term = new Terminal();
         term.open(document.getElementById('terminal'));
-
-        // WebSocket-Verbindung zum Server
         const ws = new WebSocket(`ws://${location.host}/ws`);
-
-        // Eingehende Daten in die Konsole schreiben
         ws.onmessage = evt => term.write(evt.data);
-
-        // Nutzereingaben zum Server senden
+        // Send User Input
         term.onData(data => ws.send(data));
     </script>
 </body>
